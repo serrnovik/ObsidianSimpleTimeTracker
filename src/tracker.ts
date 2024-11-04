@@ -1,5 +1,5 @@
 import { moment, MarkdownSectionInformation, ButtonComponent, TextComponent, TFile, MarkdownRenderer, Component, MarkdownRenderChild } from "obsidian";
-import { SimpleTimeTrackerSettings } from "./settings";
+import { TagBasedTimeTracker } from "./settings";
 import { ConfirmModal } from "./confirm-modal";
 
 export interface Tracker {
@@ -51,7 +51,7 @@ export async function loadAllTrackers(fileName: string): Promise<{ section: Mark
     let curr: Partial<MarkdownSectionInformation> | undefined;
     for (let i = 0; i < content.length; i++) {
         let line = content[i];
-        if (line.trimEnd() == "```simple-time-tracker") {
+        if (line.trimEnd() == "```tag-based-time-tracker") {
             curr = { lineStart: i + 1, text: "" };
         } else if (curr) {
             if (line.trimEnd() == "```") {
@@ -69,9 +69,9 @@ export async function loadAllTrackers(fileName: string): Promise<{ section: Mark
 
 type GetFile = () => string;
 
-export function displayTracker(tracker: Tracker, element: HTMLElement, getFile: GetFile, getSectionInfo: () => MarkdownSectionInformation, settings: SimpleTimeTrackerSettings, component: MarkdownRenderChild): void {
+export function displayTracker(tracker: Tracker, element: HTMLElement, getFile: GetFile, getSectionInfo: () => MarkdownSectionInformation, settings: TagBasedTimeTracker, component: MarkdownRenderChild): void {
 
-    element.addClass("simple-time-tracker-container");
+    element.addClass("tag-based-time-tracker-container");
     // add start/stop controls
     let running = isRunning(tracker);
     let btn = new ButtonComponent(element)
@@ -86,24 +86,24 @@ export function displayTracker(tracker: Tracker, element: HTMLElement, getFile: 
             }
             await saveTracker(tracker, getFile(), getSectionInfo());
         });
-    btn.buttonEl.addClass("simple-time-tracker-btn");
+    btn.buttonEl.addClass("tag-based-time-tracker-btn");
     let newSegmentNameBox = new TextComponent(element)
         .setPlaceholder("Segment name")
         .setDisabled(running);
-    newSegmentNameBox.inputEl.addClass("simple-time-tracker-txt");
+    newSegmentNameBox.inputEl.addClass("tag-based-time-tracker-txt");
 
     // add timers
-    let timer = element.createDiv({ cls: "simple-time-tracker-timers" });
-    let currentDiv = timer.createEl("div", { cls: "simple-time-tracker-timer" });
-    let current = currentDiv.createEl("span", { cls: "simple-time-tracker-timer-time" });
+    let timer = element.createDiv({ cls: "tag-based-time-tracker-timers" });
+    let currentDiv = timer.createEl("div", { cls: "tag-based-time-tracker-timer" });
+    let current = currentDiv.createEl("span", { cls: "tag-based-time-tracker-timer-time" });
     currentDiv.createEl("span", { text: "Current" });
-    let totalDiv = timer.createEl("div", { cls: "simple-time-tracker-timer" });
-    let total = totalDiv.createEl("span", { cls: "simple-time-tracker-timer-time", text: "0s" });
+    let totalDiv = timer.createEl("div", { cls: "tag-based-time-tracker-timer" });
+    let total = totalDiv.createEl("span", { cls: "tag-based-time-tracker-timer-time", text: "0s" });
     totalDiv.createEl("span", { text: "Total" });
 
     if (tracker.entries.length > 0) {
         // add table
-        let table = element.createEl("table", { cls: "simple-time-tracker-table" });
+        let table = element.createEl("table", { cls: "tag-based-time-tracker-table" });
         table.createEl("tr").append(
             createEl("th", { text: "Segment" }),
             createEl("th", { text: "Start time" }),
@@ -115,7 +115,7 @@ export function displayTracker(tracker: Tracker, element: HTMLElement, getFile: 
             addEditableTableRow(tracker, entry, table, newSegmentNameBox, running, getFile, getSectionInfo, settings, 0, component);
 
         // add copy buttons
-        let buttons = element.createEl("div", { cls: "simple-time-tracker-bottom" });
+        let buttons = element.createEl("div", { cls: "tag-based-time-tracker-bottom" });
         new ButtonComponent(buttons)
             .setButtonText("Copy as table")
             .onClick(() => navigator.clipboard.writeText(createMarkdownTable(tracker, settings)));
@@ -172,7 +172,7 @@ export function getRunningEntry(entries: Entry[]): Entry {
     return null;
 }
 
-export function createMarkdownTable(tracker: Tracker, settings: SimpleTimeTrackerSettings): string {
+export function createMarkdownTable(tracker: Tracker, settings: TagBasedTimeTracker): string {
     let table = [["Segment", "Start time", "End time", "Duration"]];
     for (let entry of orderedEntries(tracker.entries, settings))
         table.push(...createTableSection(entry, settings));
@@ -194,7 +194,7 @@ export function createMarkdownTable(tracker: Tracker, settings: SimpleTimeTracke
     return ret;
 }
 
-export function createCsv(tracker: Tracker, settings: SimpleTimeTrackerSettings): string {
+export function createCsv(tracker: Tracker, settings: TagBasedTimeTracker): string {
     let ret = "";
     for (let entry of orderedEntries(tracker.entries, settings)) {
         for (let row of createTableSection(entry, settings))
@@ -203,15 +203,15 @@ export function createCsv(tracker: Tracker, settings: SimpleTimeTrackerSettings)
     return ret;
 }
 
-export function orderedEntries(entries: Entry[], settings: SimpleTimeTrackerSettings): Entry[] {
+export function orderedEntries(entries: Entry[], settings: TagBasedTimeTracker): Entry[] {
     return settings.reverseSegmentOrder ? entries.slice().reverse() : entries;
 }
 
-export function formatTimestamp(timestamp: string, settings: SimpleTimeTrackerSettings): string {
+export function formatTimestamp(timestamp: string, settings: TagBasedTimeTracker): string {
     return moment(timestamp).format(settings.timestampFormat);
 }
 
-export function formatDuration(totalTime: number, settings: SimpleTimeTrackerSettings): string {
+export function formatDuration(totalTime: number, settings: TagBasedTimeTracker): string {
     let ret = "";
     let duration = moment.duration(totalTime);
     let hours = settings.fineGrainedDurations ? duration.hours() : Math.floor(duration.asHours());
@@ -289,7 +289,7 @@ function removeEntry(entries: Entry[], toRemove: Entry): boolean {
     return false;
 }
 
-function setCountdownValues(tracker: Tracker, current: HTMLElement, total: HTMLElement, currentDiv: HTMLDivElement, settings: SimpleTimeTrackerSettings): void {
+function setCountdownValues(tracker: Tracker, current: HTMLElement, total: HTMLElement, currentDiv: HTMLDivElement, settings: TagBasedTimeTracker): void {
     let running = getRunningEntry(tracker.entries);
     if (running && !running.endTime) {
         current.setText(formatDuration(getDuration(running), settings));
@@ -300,11 +300,11 @@ function setCountdownValues(tracker: Tracker, current: HTMLElement, total: HTMLE
     total.setText(formatDuration(getTotalDuration(tracker.entries), settings));
 }
 
-function formatEditableTimestamp(timestamp: string, settings: SimpleTimeTrackerSettings): string {
+function formatEditableTimestamp(timestamp: string, settings: TagBasedTimeTracker): string {
     return moment(timestamp).format(settings.editableTimestampFormat);
 }
 
-function unformatEditableTimestamp(formatted: string, settings: SimpleTimeTrackerSettings): string {
+function unformatEditableTimestamp(formatted: string, settings: TagBasedTimeTracker): string {
     return moment(formatted, settings.editableTimestampFormat).toISOString();
 }
 
@@ -326,7 +326,7 @@ function updateLegacyInfo(entries: Entry[]): void {
 }
 
 
-function createTableSection(entry: Entry, settings: SimpleTimeTrackerSettings): string[][] {
+function createTableSection(entry: Entry, settings: TagBasedTimeTracker): string[][] {
     let ret = [[
         entry.name,
         entry.startTime ? formatTimestamp(entry.startTime, settings) : "",
@@ -339,7 +339,7 @@ function createTableSection(entry: Entry, settings: SimpleTimeTrackerSettings): 
     return ret;
 }
 
-function addEditableTableRow(tracker: Tracker, entry: Entry, table: HTMLTableElement, newSegmentNameBox: TextComponent, trackerRunning: boolean, getFile: GetFile, getSectionInfo: () => MarkdownSectionInformation, settings: SimpleTimeTrackerSettings, indent: number, component: MarkdownRenderChild): void {
+function addEditableTableRow(tracker: Tracker, entry: Entry, table: HTMLTableElement, newSegmentNameBox: TextComponent, trackerRunning: boolean, getFile: GetFile, getSectionInfo: () => MarkdownSectionInformation, settings: TagBasedTimeTracker, indent: number, component: MarkdownRenderChild): void {
     let entryRunning = getRunningEntry(tracker.entries) == entry;
     let row = table.createEl("tr");
 
@@ -353,7 +353,7 @@ function addEditableTableRow(tracker: Tracker, entry: Entry, table: HTMLTableEle
 
     let expandButton = new ButtonComponent(nameField.label)
         .setClass("clickable-icon")
-        .setClass("simple-time-tracker-expand-button")
+        .setClass("tag-based-time-tracker-expand-button")
         .setIcon(`chevron-${entry.collapsed ? "left" : "down"}`)
         .onClick(async () => {
             if (entry.collapsed) {
@@ -367,7 +367,7 @@ function addEditableTableRow(tracker: Tracker, entry: Entry, table: HTMLTableEle
         expandButton.buttonEl.style.visibility = "hidden";
 
     let entryButtons = row.createEl("td");
-    entryButtons.addClass("simple-time-tracker-table-buttons");
+    entryButtons.addClass("tag-based-time-tracker-table-buttons");
     new ButtonComponent(entryButtons)
         .setClass("clickable-icon")
         .setIcon(`lucide-play`)
@@ -491,7 +491,7 @@ class EditableField {
         this.label = this.cell.createEl("span", { text: value });
         this.label.style.marginLeft = `${indent}em`;
         this.box = new TextComponent(this.cell).setValue(value);
-        this.box.inputEl.addClass("simple-time-tracker-input");
+        this.box.inputEl.addClass("tag-based-time-tracker-input");
         this.box.inputEl.hide();
         this.box.inputEl.addEventListener('keydown', (e: KeyboardEvent) => {
             // Save with Ctrl/Cmd + Enter
@@ -527,9 +527,9 @@ class EditableField {
 }
 
 class EditableTimestampField extends EditableField {
-    settings: SimpleTimeTrackerSettings;
+    settings: TagBasedTimeTracker;
 
-    constructor(row: HTMLTableRowElement, value: string, settings: SimpleTimeTrackerSettings) {
+    constructor(row: HTMLTableRowElement, value: string, settings: TagBasedTimeTracker) {
         super(row, 0, value ? formatTimestamp(value, settings) : "");
         this.settings = settings;
     }

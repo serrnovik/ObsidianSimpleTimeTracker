@@ -1,0 +1,10 @@
+{
+    "id": "tag-based-time-tracker",
+    "name": "Tag Based Time Tracker",
+    "version": "1.0.1",
+    "minAppVersion": "1.2.8",
+    "description": "Tag based time tracker for your notes!",
+    "author": "Sergey Novikov",
+    "authorUrl": "https://github.com/serrnovik",
+    "isDesktopOnly": false
+}

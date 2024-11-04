@@ -1,5 +1,4 @@
 # Tag-Based Time Tracker 
-Multi-purpose time tracker for your notes!
 
 ![A screenshot of the plugin in action](reporting-screenshot.png)
 
@@ -7,7 +6,7 @@ This is a fork of [super-simple-plugin](https://github.com/Ellpeck/ObsidianSimpl
 
 # TLDR 
 
-1. Execute the `Super Simple Time Tracker: Insert Time Tracker` command to start logging.
+1. Execute the `Tag Based Time Tracker: Insert Time Tracker` command to start logging.
 2. Set your tags in the settings in YAML format:
 
 ```yaml
@@ -80,17 +79,17 @@ clients:
 ```
 
 ## Tracker Data in Dataview
-Super Simple Time Tracker has a public API that can be used with [Dataview](https://blacksmithgu.github.io/obsidian-dataview/), specifically [DataviewJS](https://blacksmithgu.github.io/obsidian-dataview/api/intro/), which can be accessed using the following code:
+Tag Based Time Tracker has a public API that can be used with [Dataview](https://blacksmithgu.github.io/obsidian-dataview/), specifically [DataviewJS](https://blacksmithgu.github.io/obsidian-dataview/api/intro/), which can be accessed using the following code:
 
 ```js
-dv.app.plugins.plugins["simple-time-tracker"].api;
+dv.app.plugins.plugins["tag-based-time-tracker"].api;
 ```
 
 The following is a short example that uses DataviewJS to load all trackers in the vault and print the total duration of each tracker:
 
 ```js
 // Get the time tracker plugin API instance
-let api = dv.app.plugins.plugins["simple-time-tracker"].api;
+let api = dv.app.plugins.plugins["tag-based-time-tracker"].api;
 
 for (let page of dv.pages()) {
     // Load trackers in the file with the given path

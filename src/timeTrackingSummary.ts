@@ -1,14 +1,14 @@
-import { SimpleTimeTrackerSettings } from "./settings";
+import { TagBasedTimeTracker } from "./settings";
 import { Configuration, Section, Item, SubTag } from "./interfaces";
 import { parseYaml, moment } from "obsidian";
 
 
 export class TimeTrackingSummary {
-    settings: SimpleTimeTrackerSettings;
+    settings: TagBasedTimeTracker;
     api: any;
     app: any; // Reference to the Obsidian app
 
-    constructor(app: any, settings: SimpleTimeTrackerSettings, api: any) {
+    constructor(app: any, settings: TagBasedTimeTracker, api: any) {
         this.app = app;
         this.settings = settings;
         this.api = api;

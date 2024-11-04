@@ -1,6 +1,6 @@
 import { Editor, MarkdownRenderChild, moment, Plugin, TFile } from "obsidian";
-import { defaultSettings, SimpleTimeTrackerSettings } from "./settings";
-import { SimpleTimeTrackerSettingsTab } from "./settings-tab";
+import { defaultSettings, TagBasedTimeTracker } from "./settings";
+import { TagBasedTimeTrackerTab } from "./settings-tab";
 import {
     displayTracker,
     Entry,
@@ -16,7 +16,7 @@ import {
 } from "./tracker";
 import { TimeTrackingSummary } from "./timeTrackingSummary";
 
-export default class SimpleTimeTrackerPlugin extends Plugin {
+export default class TagBasedTimeTrackerPlugin extends Plugin {
     public api = {
         // verbatim versions of the functions found in tracker.ts with the same parameters
         loadTracker,
@@ -34,15 +34,15 @@ export default class SimpleTimeTrackerPlugin extends Plugin {
         orderedEntries: (entries: Entry[]) =>
             orderedEntries(entries, this.settings),
     };
-    public settings: SimpleTimeTrackerSettings;
+    public settings: TagBasedTimeTracker;
 
     async onload(): Promise<void> {
         await this.loadSettings();
 
-        this.addSettingTab(new SimpleTimeTrackerSettingsTab(this.app, this));
+        this.addSettingTab(new TagBasedTimeTrackerTab(this.app, this));
 
         this.registerMarkdownCodeBlockProcessor(
-            "simple-time-tracker",
+            "tag-based-time-tracker",
             (s, e, i) => {
                 e.empty();
                 let component = new MarkdownRenderChild(e);
@@ -77,7 +77,7 @@ export default class SimpleTimeTrackerPlugin extends Plugin {
             id: `insert`,
             name: `Insert Time Tracker`,
             editorCallback: (e, _) => {
-                e.replaceSelection("```simple-time-tracker\n```\n");
+                e.replaceSelection("```tag-based-time-tracker\n```\n");
             },
         });
 

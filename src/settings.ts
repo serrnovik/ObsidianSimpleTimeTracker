@@ -1,4 +1,4 @@
-export const defaultSettings: SimpleTimeTrackerSettings = {
+export const defaultSettings: TagBasedTimeTracker = {
     timestampFormat: "YY-MM-DD HH:mm:ss",
     editableTimestampFormat: "YYYY-MM-DD HH:mm:ss",
     csvDelimiter: ",",
@@ -44,7 +44,7 @@ clients:
       subTags: []`
 };
 
-export interface SimpleTimeTrackerSettings {
+export interface TagBasedTimeTracker {
     timestampFormat: string;
     editableTimestampFormat: string;
     csvDelimiter: string;

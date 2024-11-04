@@ -1,19 +1,19 @@
 import {App, PluginSettingTab, Setting} from "obsidian";
-import SimpleTimeTrackerPlugin from "./main";
+import TagBasedTimeTrackerPlugin from "./main";
 import {defaultSettings} from "./settings";
 
-export class SimpleTimeTrackerSettingsTab extends PluginSettingTab {
+export class TagBasedTimeTrackerTab extends PluginSettingTab {
 
-    plugin: SimpleTimeTrackerPlugin;
+    plugin: TagBasedTimeTrackerPlugin;
 
-    constructor(app: App, plugin: SimpleTimeTrackerPlugin) {
+    constructor(app: App, plugin: TagBasedTimeTrackerPlugin) {
         super(app, plugin);
         this.plugin = plugin;
     }
 
     display(): void {
         this.containerEl.empty();
-        this.containerEl.createEl("h2", {text: "Super Simple Time Tracker Settings"});
+        this.containerEl.createEl("h2", {text: "Tag Based Time Tracker Settings"});
 
         new Setting(this.containerEl)
             .setName("Timestamp Display Format")
@@ -94,12 +94,12 @@ export class SimpleTimeTrackerSettingsTab extends PluginSettingTab {
         this.containerEl.createEl("p", { text: "Need help using the plugin? Feel free to join the Discord server!" });
         this.containerEl.createEl("a", { href: "https://link.ellpeck.de/discordweb" }).createEl("img", {
             attr: { src: "https://ellpeck.de/res/discord-wide.png" },
-            cls: "simple-time-tracker-settings-image"
+            cls: "tag-based-time-tracker-settings-image"
         });
         this.containerEl.createEl("p", { text: "If you like this plugin and want to support its development, you can do so through my website by clicking this fancy image!" });
         this.containerEl.createEl("a", { href: "https://ellpeck.de/support" }).createEl("img", {
             attr: { src: "https://ellpeck.de/res/generalsupport-wide.png" },
-            cls: "simple-time-tracker-settings-image"
+            cls: "tag-based-time-tracker-settings-image"
         });
     }
 }
