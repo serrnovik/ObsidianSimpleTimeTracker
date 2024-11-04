@@ -108,7 +108,7 @@ export class TimeTrackingSummary {
 
         
         if (streamKey && streamKey.trim() !== "") {
-            console.log(`streamKey: ${streamKey} is not empty, proceeding to filter dimensions`);
+            
             
             // Create mapping of section keys and names to dimensions
             const sectionMapping: { [key: string]: string } = {};
@@ -120,7 +120,7 @@ export class TimeTrackingSummary {
             // Find matching section
             const filteredDimensions: typeof dimensionDurations = {};
             for (const dimension in dimensionDurations) {
-                console.log(`dimension: ${dimension}, checking match with ${streamKey}`);
+                
                 // Check if streamKey matches either section key or display name
                 if (dimension.toLowerCase() === streamKey || 
                     Object.keys(sectionMapping).includes(streamKey)) {
@@ -149,7 +149,7 @@ export class TimeTrackingSummary {
 
         // Display the results
         for (let dimension in dimensionDurations) {
-            console.log(`dimension: ${dimension}`);
+            
             let totalDuration = Object.values(
                 dimensionDurations[dimension]
             ).reduce((sum, hours) => sum + hours, 0);
@@ -200,18 +200,17 @@ export class TimeTrackingSummary {
 
     parseConfiguration(): Configuration {
         const yamlContent = this.settings.tagConfigurationsYaml;
-        console.log(`received config:\n ${yamlContent}`);
+        // console.log(`received config:\n ${yamlContent}`);
         const config = parseYaml(yamlContent);
 
-        console.log("Parsed configuration:", config);
+        // console.log("Parsed configuration:", config);
 
         if (!config || typeof config !== "object") {
             throw new Error("Invalid configuration format.");
         }
 
         // Validate and transform the configuration
-        for (const [sectionKey, sectionValue] of Object.entries(config)) {
-            console.log(`sectionKey: ${sectionKey}`);
+        for (const [sectionKey, sectionValue] of Object.entries(config)) {            
             if (
                 !sectionValue.hasOwnProperty("name") ||
                 !sectionValue.hasOwnProperty("items")
@@ -222,8 +221,7 @@ export class TimeTrackingSummary {
             }
 
             // Recursively validate items and subTags
-            const validateItems = (items: any[]) => {
-                console.log(`items: ${items}`);
+            const validateItems = (items: any[]) => {                
                 for (const item of items) {
                     if (
                         !item.hasOwnProperty("topic") ||
