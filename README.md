@@ -2,7 +2,8 @@
 
 ![A screenshot of the plugin in action](reporting-screenshot.png)
 
-This is a fork of [super-simple-plugin](https://github.com/Ellpeck/ObsidianSimpleTimeTracker) that has support for out-of-the-box tagging.
+This is a fork of [super-simple-plugin](https://github.com/Ellpeck/ObsidianSimpleTimeTracker) designed to provide out-of-the-box easy summaries based on tags within tracking records.
+The motivation for this fork comes from the need for straightforward time tracking with easy summaries and total time calculations. While the original plugin aimed to remain 'simple' and could achieve these features through dataview, I believe that native summary features offer a more user friendly solution."
 
 # TLDR 
 
